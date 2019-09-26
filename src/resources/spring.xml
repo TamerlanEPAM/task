@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+ 		http://www.springframework.org/schema/beans
+ 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="client" class="kz.zhabassov.spring.Client">
+        <constructor-arg value="1"/>
+        <constructor-arg value="John Smith"/>
+    </bean>
+
+    <bean id="consoleEventLogger" class="kz.zhabassov.spring.ConsoleEventLogger"/>
+
+    <bean id="event" class="kz.zhabassov.spring.Event" scope="prototype">
+        <constructor-arg>
+            <bean class="java.util.Date"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="java.text.DateFormat" factory-method="getDateTimeInstance"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="fileEventLogger" class="kz.zhabassov.spring.FileEventLogger" init-method="init">
+        <constructor-arg value="C:/Users/tamerlan_zhabassov/IdeaProjects/core/log/log.log"/>
+    </bean>
+
+    <bean id="cacheFileLogger" class="kz.zhabassov.spring.CacheFileLogger" destroy-method="destroy" parent="fileEventLogger">
+        <constructor-arg value="2"/>
+    </bean>
+
+    <bean id="app" class="kz.zhabassov.spring.App" scope="prototype">
+        <constructor-arg ref="client"/>
+        <constructor-arg ref="cacheFileLogger"/>
+        <constructor-arg ref="event"/>
+    </bean>
+
+</beans>
